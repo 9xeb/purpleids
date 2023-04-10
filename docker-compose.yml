@@ -5,7 +5,7 @@ services:
   # TODO: move database to a proper postgres instance instead of built-in sqlite
   crowdsec:
     #image: crowdsecurity/crowdsec:latest
-    build: ./analysis/crowdsec/
+    build: ./purpleids/crowdsec/
     restart: always
     container_name: crowdsec
     environment:
@@ -30,7 +30,7 @@ services:
       - crowdsec
 
   rita:
-    build: ./analysis/rita/
+    build: ./purpleids/rita/
     container_name: rita
     restart: always
     depends_on:
@@ -72,7 +72,7 @@ services:
 
   threatintel:
     #image: 9xeb/threatintel:latest
-    build: ./analysis/diamond/
+    build: ./purpleids/diamond/
     restart: always
     container_name: diamond
     mem_limit: 512M
@@ -110,7 +110,7 @@ services:
       - threat-intelligence
 
   autozed:
-    build: ./analysis/autozed
+    build: ./purpleids/autozed
     restart: always
     container_name: autozed
     ports:
@@ -124,29 +124,29 @@ services:
     networks:
       - autozed
 
-  grafana:
-    #image: grafana/grafana-oss
-    #image: 9xeb/grafana:latest
-    build: ./analysis/grafana/
-    restart: always
-    container_name: grafana
-    ports:
-      - "3001:3000"
-    environment:
-      HTTP_USER: user
-      HTTP_PASS: pass
-      GF_INSTALL_PLUGINS: frser-sqlite-datasource
-    volumes:
-      - crowdsec-database:/crowdsec-db:ro
-#      - redbot-data:/redbot-db:ro
-    #  - grafana-storage:/var/lib/grafana
-    networks:
-      - threat-intelligence
-      - elastic
-    depends_on:
-#      - elasticsearch
-      - crowdsec
-      - threatintel-database
+#  grafana:
+#    #image: grafana/grafana-oss
+#    #image: 9xeb/grafana:latest
+#    build: ./purpleids/grafana/
+#    restart: always
+#    container_name: grafana
+#    ports:
+#      - "3001:3000"
+#    environment:
+#      HTTP_USER: user
+#      HTTP_PASS: pass
+#      GF_INSTALL_PLUGINS: frser-sqlite-datasource
+#    volumes:
+#      - crowdsec-database:/crowdsec-db:ro
+##      - redbot-data:/redbot-db:ro
+#    #  - grafana-storage:/var/lib/grafana
+#    networks:
+#      - threat-intelligence
+#      - elastic
+#    depends_on:
+##      - elasticsearch
+#      - crowdsec
+#      - threatintel-database
 
 #volumes:
 #  rita-database:
