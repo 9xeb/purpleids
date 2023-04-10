@@ -1,0 +1,3 @@
+[submodule "diamond"]
+	path = diamond
+	url = git@github.com:9xeb/diamond.git

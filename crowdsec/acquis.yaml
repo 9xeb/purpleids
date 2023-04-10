@@ -1,0 +1,22 @@
+---
+#filename: /apache2/*.log
+#labels:
+#  type: apache2
+---
+#filename: /nginx/*.log
+#labels:
+#  type: nginx
+---
+filenames:
+#  - /ti-logs/elasticsearch.log
+#  - /ti-logs/stdin.log
+  - /swag-logs/nginx/*.log
+labels:
+  type: nginx
+---
+#filenames:
+#  - /ti-logs/elasticsearch.log
+#  - /ti-logs/stdin.log
+#labels:
+#  type: apache2
+---

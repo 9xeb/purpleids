@@ -1,0 +1,3 @@
+FROM crowdsecurity/crowdsec:latest
+COPY ./acquis.yaml /etc/crowdsec/acquis.yaml
+

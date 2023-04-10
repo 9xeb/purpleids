@@ -1,0 +1,161 @@
+version: '2.2'
+
+# Analysis center
+services:
+  # TODO: move database to a proper postgres instance instead of built-in sqlite
+  crowdsec:
+    #image: crowdsecurity/crowdsec:latest
+    build: ./analysis/crowdsec/
+    restart: always
+    container_name: crowdsec
+    environment:
+      #GID: "1000"
+      # credentials for the 'Threatintel' container (does it actually use them anymore?)
+      #AGENT_USERNAME: ${CROWDSEC_USERNAME}
+      #AGENT_PASSWORD: ${CROWDSEC_PASSWORD}
+      #PARSERS: "crowdsecurity/suricata-logs"
+      #DISABLE_COLLECTIONS: "crowdsecurity/linux"
+      #DISABLE_AGENT: "true"
+      COLLECTIONS: "crowdsecurity/suricata crowdsecurity/apache2 crowdsecurity/nginx"
+    ports:
+      - "9201:8080"
+    volumes:
+      - crowdsec-database:/var/lib/crowdsec/data/
+    # it is impossible to parse centralized logs, because crowdsec's leaky bucket design works in the scope of a single agent (or is it a single source file?)
+    #  - crowdsec-config:/etc/crowdsec/
+      - threatintel-logs:/ti-logs:ro
+      - swag-logs:/swag-logs:ro
+    #  - threatintel-logs:/nginx:ro
+    networks:
+      - crowdsec
+
+  rita:
+    build: ./analysis/rita/
+    container_name: rita
+    restart: always
+    depends_on:
+      - mongorita
+      - threatintel-database
+    environment:
+      # credentials for postgres analysis database
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - zeek-logs:/zeek-logs:ro
+      - rita-logs:/data
+    networks:
+      - rita
+      - threat-intelligence
+
+  mongorita:
+    image: mongo:4.2
+    container_name: mongorita
+    restart: always
+    volumes:
+      - rita-database:/data/db
+    networks:
+      - rita
+
+  threatintel-database:
+    image: postgres:latest
+    restart: always
+    container_name: threatintel-database
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: threatintel
+      #MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - threatintel-database:/data/db
+    networks:
+      - threat-intelligence
+
+  threatintel:
+    #image: 9xeb/threatintel:latest
+    build: ./analysis/diamond/
+    restart: always
+    container_name: diamond
+    mem_limit: 512M
+    cpus: 0.5
+    volumes:
+      - threatintel-logs:/threatintel/data/
+      - zeek-spool:/logs/zeek-spool:ro
+      - suricata-logs:/logs/suricata-logs:ro
+    #  - crowdsec-db:/threatintel/data/db/
+      #- ${LOGDIR}:/logs
+      #- ./config/wazuh_indexer_ssl_certs/root-ca.pem:/ca.cert
+    environment:
+      #CORTEX_APP_URL: http://cortex:9001
+      #CORTEX_API_KEY: "${CORTEX_API_KEY}"
+      LOGS_TIMEZONE_OFFSET: ${LOGS_TIMEZONE_OFFSET}
+      ELASTIC_HOST: http://serv3.leandojo:9200
+      ELASTIC_INDEX: filebeat-*
+#      CROWDSEC_LAPI_URL: http://crowdsec:8080
+#      CROWDSEC_AGENT_USERNAME: ${CROWDSEC_USERNAME}
+#      CROWDSEC_AGENT_PASSWORD: ${CROWDSEC_PASSWORD}
+      ELASTIC_USER: "${ELASTICSEARCH_USERNAME}"
+      ELASTIC_PASSWORD: "${ELASTICSEARCH_PASSWORD}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+#      METABASE_USER: "${METABASE_USER}"
+#      METABASE_PASSWORD: "${METABASE_PASSWORD}"
+#      OTX_API_KEY: "${OTX_API_KEY}"
+    depends_on:
+#      - elasticsearch
+      - crowdsec
+      - threatintel-database
+    networks:
+      - crowdsec
+      - elastic
+      - threat-intelligence
+
+  autozed:
+    build: ./analysis/autozed
+    restart: always
+    container_name: autozed
+    ports:
+      - 9867:9867
+    volumes:
+#      - autozed-lake:/zed
+      - zeek-logs:/zeek-logs:ro
+      - zeek-spool:/zeek-spool:ro
+      - suricata-logs:/suricata-logs:ro
+      - rita-logs:/rita-logs:ro
+    networks:
+      - autozed
+
+  grafana:
+    #image: grafana/grafana-oss
+    #image: 9xeb/grafana:latest
+    build: ./analysis/grafana/
+    restart: always
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      HTTP_USER: user
+      HTTP_PASS: pass
+      GF_INSTALL_PLUGINS: frser-sqlite-datasource
+    volumes:
+      - crowdsec-database:/crowdsec-db:ro
+#      - redbot-data:/redbot-db:ro
+    #  - grafana-storage:/var/lib/grafana
+    networks:
+      - threat-intelligence
+      - elastic
+    depends_on:
+#      - elasticsearch
+      - crowdsec
+      - threatintel-database
+
+#volumes:
+#  rita-database:
+#  zeek-logs:
+#  zeek-spool:
+
+networks:
+  rita:
+  crowdsec:
+  elastic:
+  threat-intelligence:
+  autozed:
