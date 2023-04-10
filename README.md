@@ -1,5 +1,5 @@
 # PurpleIDS
-A docker compose configuration for intrusion detection, Dos protection and threat hunting.
+A docker compose configuration for intrusion detection, Dos protection and threat hunting. It is meant to run in 9xeb/purplesec, hence the misaligned paths in docker-compose.yml. It has its own repo for easier versioning only.
 
 
 Originally developed for my own homelab, I believe it can be applied to many small environments that need to propel their detection from zero to decent.
