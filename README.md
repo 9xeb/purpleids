@@ -31,6 +31,8 @@ Last but not least, __Autozed__. A custom docker image based on the awesome Zed 
 ## How to use
 Connect to tcp/9867 using Zui and explore all the available logs to perform threat hunting using the powerful Zed query language. Beacons, certificates, addresses, ports, protocols and software fingerprints are some of the information that are ready at hand, refreshed regularly.
 
+
+There will be something available to monitor what the Crowdsec agent is doing soon. For now you'll have to query the agent from terminal.
 ## Future additions
  * Refactoring and better code readability
  * Support for other vectors than hashes, for example URLs
