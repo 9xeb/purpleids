@@ -1,17 +1,17 @@
 # PurpleIDS
-A docker compose configuration for intrusion detection, Dos protection and threat hunting. It is meant to run in 9xeb/purplesec, hence the misaligned paths in docker-compose.yml. It has its own repo for easier versioning only.
+A docker compose configuration for intrusion detection, DoS and exploitation protection, and threat hunting. It is meant to run in 9xeb/purplesec, hence the misaligned paths in some compose files. It has its own repo for easier versioning only.
 
 
 Originally developed for my own homelab, I believe it can be applied to many small environments that need to propel their detection from zero to decent.
 
 ## A note on logs
 Logs are imported via docker volumes or bind mounts. Out of all solutions, this turned out to be the best tradeoff between applicability and complexity of setup.
-Check 9xeb/purplesec for a clever setup using multi host NFS docker volumes running through SSH tunnels, ensuring easy logs imports and much lower costs compared to solutions like Elasticsearch for small scale networks.
+Check my purplesec repo for a clever setup using multi host NFS docker volumes running through SSH tunnels, ensuring easy logs imports and much lower costs compared to solutions like Elasticsearch for small scale networks.
 
 
 Currently supported logs are:
  * Zeek logs and Suricata eve.json files
- * access.log files from web servers, and anything else the Crowdsec Hub covers.
+ * access.log files from web servers out of the box, and anything else the Crowdsec Hub covers with some minimal adjustments.
 
 ## How it works
 A set of containers working together for a common goal, following different analysis techniques.
