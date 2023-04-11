@@ -121,6 +121,7 @@ services:
       - zeek-spool:/zeek-spool:ro
       - suricata-logs:/suricata-logs:ro
       - rita-logs:/rita-logs:ro
+      - threatintel-logs:/diamond-logs:ro
     networks:
       - autozed
 
