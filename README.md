@@ -27,3 +27,8 @@ Diamond ingests log lines and spits out JSON records containing correlated obser
 
 
 Last but not least, Autozed. A custom docker image based on the awesome Zed project by Brim Data. I tried to leverage Zed data lakes creatively to expose an API for threat hunting. Zeek and RITA logs are loaded into the lake following a rolling strategy that retains up to the last 24 hours of logs, and refreshes every 5 minutes. You can connect to the data lake using Zui (formerly Brim) and perform all sorts of queries. In the future I plan to add some default queries that best use the data that is available.
+
+## Future additions
+ * Refactoring and better code readability
+ * Support for other vectors than hashes, for example URLs
+ * IPv6 support
