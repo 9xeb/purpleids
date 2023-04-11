@@ -54,7 +54,13 @@ while true; do
     done
 
     zed create /network/beacons
+    zed create /intel/diamond
+    zed create /intel/tags
+
     zed load -use /network/beacons /rita-logs/beacons.csv /rita-logs/beacons-sni.csv
+    zed load -use /intel/diamond /diamond-logs/diamond.log
+    zed load -use /intel/tags /diamond-logs/tags.log
+
 
     # Revert current pools
     sleep 300
@@ -68,6 +74,8 @@ while true; do
     done
 
     zed drop -f /network/beacons
+    zed drop -f /intel/diamond
+    zed drop -f /intel/tags
     #zed revert -use /network/beacons $(zed -use /network/beacons log | head -n 1 | cut -d' ' -f 2)
   done
 done
