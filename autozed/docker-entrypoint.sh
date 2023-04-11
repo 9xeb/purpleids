@@ -67,7 +67,8 @@ while true; do
 #      done
     done
 
-    zed revert -use /network/beacons $(zed -use /network/beacons log | head -n 1 | cut -d' ' -f 2)
+    zed drop -f /network/beacons
+    #zed revert -use /network/beacons $(zed -use /network/beacons log | head -n 1 | cut -d' ' -f 2)
   done
 done
 #tail -F /zed/zlake.log
