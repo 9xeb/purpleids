@@ -70,7 +70,7 @@ services:
     networks:
       - threat-intelligence
 
-  threatintel:
+  diamond:
     #image: 9xeb/threatintel:latest
     build: ./diamond/
     restart: always
