@@ -37,3 +37,5 @@ There will be something available to monitor what the Crowdsec agent is doing so
  * Refactoring and better code readability
  * Support for other vectors than hashes, for example URLs
  * IPv6 support
+ * Better integration with Crowdsec's LAPI for active response
+ * Virustotal integration in diamond
