@@ -5,7 +5,7 @@ services:
   # TODO: move database to a proper postgres instance instead of built-in sqlite
   crowdsec:
     #image: crowdsecurity/crowdsec:latest
-    build: ./purpleids/crowdsec/
+    build: ./crowdsec/
     restart: always
     container_name: crowdsec
     environment:
@@ -30,7 +30,7 @@ services:
       - crowdsec
 
   rita:
-    build: ./purpleids/rita/
+    build: ./rita/
     container_name: rita
     restart: always
     depends_on:
@@ -72,7 +72,7 @@ services:
 
   diamond:
     #image: 9xeb/threatintel:latest
-    build: ./purpleids/diamond/
+    build: ./diamond/
     restart: always
     container_name: diamond
     mem_limit: 512M
@@ -110,7 +110,7 @@ services:
       - threat-intelligence
 
   autozed:
-    build: ./purpleids/autozed
+    build: ./autozed
     restart: always
     container_name: autozed
     ports:
