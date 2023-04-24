@@ -25,6 +25,7 @@ done &
 while zed ls 2>&1 | grep refused; do
   sleep 5
 done
+
 # every 24 hours loads yesterday's zeek logs
 # every 5 minutes rebuild pool with latest eve.json and zeek current logs
 while true; do
