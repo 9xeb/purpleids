@@ -138,10 +138,19 @@ services:
 #      - crowdsec
 #      - threatintel-database
 
-#volumes:
-#  rita-database:
-#  zeek-logs:
-#  zeek-spool:
+volumes:
+  rita-database:
+  rita-logs:
+  zeek-logs:
+  zeek-spool:
+  suricata-logs:
+  threatintel-logs:
+  threatintel-database:
+  crowdsec-database:
+  swag-logs:
+  dvwa-logs:
+
+
 networks:
   rita:
   crowdsec:
