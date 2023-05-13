@@ -50,10 +50,15 @@ while true; do
           find /zeek-spool/ -type f -name ${value}'*' -exec cat {} \; 2>/dev/null
         done
       done;
-      cat /rita-logs/beacons.csv /rita-logs/beacons-sni.csv;
+      #cat /rita-logs/beacons.csv /rita-logs/beacons-sni.csv;
       # intel/diamond /intel/tags;
-    } | grep '^{' | zed load -use /unified - && echo "[unified] Reloaded yesterday's logs"
+    } | grep '^{' | zed load -use /unified - && echo "[unified] Reloaded current zeek logs"
+    cat /rita-logs/beacons.csv | zed load -use /unified - && echo "[unified] Reloaded current rita beacons"
+    cat /rita-logs/beacons-sni.csv | zed load -use /unified - && echo "[unified] Reloaded current rita beacons sni"
     sleep 300
-    zed revert -use /unified $(zed -use /unified log | head -n 1 | cut -d' ' -f 2)
+    # revert for each load
+    for i in $(seq 1 3); do
+      zed revert -use /unified $(zed -use /unified log | head -n 1 | cut -d' ' -f 2)
+    done
   done
 done

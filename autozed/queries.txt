@@ -1,0 +1,35 @@
+# Spellbook
+If these are run daily, anomaly detection and new emerging network behavior can be classified based on responses to queries
+
+# communicated hosts
+this["id.orig_h"]!=null this["id.resp_h"]!=null | cut this["id.orig_h"], this["id.resp_h"]
+
+# frequently communicated hosts
+fuse | this["id.resp_h"]!=null this["id.orig_h"]!=null | cut this["id.resp_h"], this["id.orig_h"] | sort | uniq -c | sort -r
+
+# most active ports
+fuse | this["id.resp_p"]!=null this["service"] != null | cut this["id.resp_p"], this["service"]  | sort | uniq -c | sort -r count
+
+# long connections
+this["id.orig_h"]!=null this["id.resp_p"]!=null this["id.resp_h"]!=null this["duration"]!=null | cut this["id.orig_h"], this["id.resp_p"], this["id.resp_h"], this["duration"] | sort -r duration
+
+# transferred data
+fuse | put total_bytes := orig_bytes + resp_bytes | sort -r total_bytes | cut uid, id, orig_bytes, resp_bytes, total_bytes
+
+# DNS requests
+fuse | query!=null | count() by query | sort -r count
+
+# HTTP requests
+fuse | uri!=null | count() by uri | sort -r count
+
+# suspicious hostname
+fuse | host_name!=null | cut host_name, domain
+
+# suspicious IP address (does not work)
+fuse | put classnet := network_of(id.resp_h) | cut classnet | count() by classnet | sort -r
+
+# detect files
+filename!=null
+
+# known patterns (ADD suspicious diamond mappings here)
+event_type=="alert"
