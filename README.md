@@ -39,3 +39,4 @@ There will be something available to monitor what the Crowdsec agent is doing so
  * IPv6 support
  * Better integration with Crowdsec's LAPI for active response
  * Virustotal integration in diamond
+ * Crowdsec daily report in zed data lake
