@@ -33,3 +33,6 @@ filename!=null
 
 # known patterns (ADD suspicious diamond mappings here)
 event_type=="alert"
+
+# rita beacons
+fuse | Score!=null | cut Score, this["Source IP"],  this["Destination IP"] , this["SNI"] | sort -r Score
