@@ -57,8 +57,8 @@ while true; do
     cat /rita-logs/beacons-sni.csv | zed load -use /unified - && echo "[unified] Reloaded current rita beacons sni"
     sleep 300
     # revert for each load
-    for i in $(seq 1 3); do
-      zed revert -use /unified $(zed log -use /unified | tac | tail -n 1 | cut -d' ' -f 2)
+    for i in $(zed log -use /unified | grep '^commit' | cut -d' ' -f2 | head -n 3); do
+      zed revert -use /unified ${i}
     done
   done
 done
