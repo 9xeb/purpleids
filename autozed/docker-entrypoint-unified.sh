@@ -58,7 +58,7 @@ while true; do
     sleep 300
     # revert for each load
     for i in $(seq 1 3); do
-      zed revert -use /unified $(zed -use /unified log | head -n 1 | cut -d' ' -f 2)
+      zed revert -use /unified $(zed log -use /unified | tac | tail -n 1 | cut -d' ' -f 2)
     done
   done
 done
